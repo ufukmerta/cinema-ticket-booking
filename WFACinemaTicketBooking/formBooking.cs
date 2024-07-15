@@ -28,7 +28,7 @@ namespace WFACinemaTicketBooking
 
         int movieSessionID = 0;
         int hallCapacity = 60;
-        int price = 100;
+        int price = 20;
 
         SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
@@ -236,10 +236,10 @@ namespace WFACinemaTicketBooking
 
         private void rb_TicketType_CheckedChanged(object sender, EventArgs e)
         {
-            if (rb_Student.Checked == true)
-                price = 80;
+            if (rb_Young.Checked == true)
+                price = 16;
             else
-                price = 100;
+                price = 20;
         }
 
         private void btn_FindCustomer_Click(object sender, EventArgs e)

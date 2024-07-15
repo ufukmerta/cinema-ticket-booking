@@ -127,7 +127,7 @@ namespace WFACinemaTicketBooking
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.rb_Student = new System.Windows.Forms.RadioButton();
+            this.rb_Young = new System.Windows.Forms.RadioButton();
             this.rb_Normal = new System.Windows.Forms.RadioButton();
             this.label19 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -1068,7 +1068,7 @@ namespace WFACinemaTicketBooking
             this.groupBox6.Controls.Add(this.label15);
             this.groupBox6.Controls.Add(this.label14);
             this.groupBox6.Controls.Add(this.label13);
-            this.groupBox6.Controls.Add(this.rb_Student);
+            this.groupBox6.Controls.Add(this.rb_Young);
             this.groupBox6.Controls.Add(this.rb_Normal);
             this.groupBox6.Controls.Add(this.label19);
             this.groupBox6.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
@@ -1284,16 +1284,16 @@ namespace WFACinemaTicketBooking
             this.label13.Size = new System.Drawing.Size(20, 20);
             this.label13.TabIndex = 44;
             // 
-            // rb_Student
+            // rb_Young
             // 
-            this.rb_Student.AutoSize = true;
-            this.rb_Student.Location = new System.Drawing.Point(6, 71);
-            this.rb_Student.Name = "rb_Student";
-            this.rb_Student.Size = new System.Drawing.Size(88, 20);
-            this.rb_Student.TabIndex = 72;
-            this.rb_Student.Text = "Young ($16)";
-            this.rb_Student.UseVisualStyleBackColor = true;
-            this.rb_Student.CheckedChanged += new System.EventHandler(this.rb_TicketType_CheckedChanged);
+            this.rb_Young.AutoSize = true;
+            this.rb_Young.Location = new System.Drawing.Point(6, 71);
+            this.rb_Young.Name = "rb_Young";
+            this.rb_Young.Size = new System.Drawing.Size(88, 20);
+            this.rb_Young.TabIndex = 72;
+            this.rb_Young.Text = "Young ($16)";
+            this.rb_Young.UseVisualStyleBackColor = true;
+            this.rb_Young.CheckedChanged += new System.EventHandler(this.rb_TicketType_CheckedChanged);
             // 
             // rb_Normal
             // 
@@ -1462,7 +1462,7 @@ namespace WFACinemaTicketBooking
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.RadioButton rb_Student;
+        private System.Windows.Forms.RadioButton rb_Young;
         private System.Windows.Forms.RadioButton rb_Normal;
         private System.Windows.Forms.Label label1;
 
