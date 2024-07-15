@@ -57,6 +57,7 @@
   <ItemGroup>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -169,13 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
-    <Content Include="App_Data\MovieTicketBookingDB.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\MovieTicketBookingDB_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>MovieTicketBookingDB.mdf</DependentUpon>
-    </Content>
     <None Include="Resources\app.ico" />
   </ItemGroup>
   <ItemGroup>

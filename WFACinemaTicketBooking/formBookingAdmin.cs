@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -26,7 +27,7 @@ namespace WFACinemaTicketBooking
 
         int userID = 0;
 
-        SqlConnection connection = new SqlConnection(@"Data Source =(LocalDB)\MSSQLLocalDB;Initial Catalog=MovieTicketBookingDB;AttachDBFilename=|DataDirectory|\App_Data\MovieTicketBookingDB.mdf;Integrated Security = True;");
+        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
         {
             if (connection.State == ConnectionState.Closed)

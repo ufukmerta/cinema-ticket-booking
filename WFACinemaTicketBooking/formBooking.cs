@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -29,7 +30,7 @@ namespace WFACinemaTicketBooking
         int hallCapacity = 60;
         int price = 100;
 
-        SqlConnection connection = new SqlConnection(@"Data Source =(LocalDB)\MSSQLLocalDB;Initial Catalog=MovieTicketBookingDB;AttachDBFilename=|DataDirectory|\App_Data\MovieTicketBookingDB.mdf;Integrated Security = True;");
+        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
         {
             if (connection.State == ConnectionState.Closed)
@@ -201,6 +202,7 @@ namespace WFACinemaTicketBooking
         void bookTicket()
         {
             connect();
+            int ins = 0;
             for (int i = 0; i < seats.Count; i++)
             {
                 SqlCommand cmd = new SqlCommand("insert into tbl_TicketBooking(movieSessionID, userID, seatNo, price) " +
@@ -209,10 +211,11 @@ namespace WFACinemaTicketBooking
                 cmd.Parameters.AddWithValue("@userID", userID);
                 cmd.Parameters.AddWithValue("@seatNo", seats[i]);
                 cmd.Parameters.AddWithValue("@price", price);
-                cmd.ExecuteNonQuery();
+                ins += cmd.ExecuteNonQuery();
                 this.Controls.Find("btn" + seats[i].ToString(), true)[0].BackColor = Color.LightCoral;
             }
             connect();
+            MessageBox.Show(ins.ToString());
             if (txt_seatNo.TextLength <= 2 && isAuthorized)
                 MessageBox.Show("Number " + txt_seatNo.Text + " seat is booked by " + txt_UserName.Text);
             else if (txt_seatNo.TextLength > 2 && isAuthorized)

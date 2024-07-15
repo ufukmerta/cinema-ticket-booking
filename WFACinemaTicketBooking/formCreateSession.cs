@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -12,7 +13,7 @@ namespace WFACinemaTicketBooking
         {
             InitializeComponent();
         }
-        SqlConnection connection = new SqlConnection(@"Data Source =(LocalDB)\MSSQLLocalDB;Initial Catalog=MovieTicketBookingDB;AttachDBFilename=|DataDirectory|\App_Data\MovieTicketBookingDB.mdf;Integrated Security = True;");
+        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
         {
             if (connection.State == ConnectionState.Closed)
@@ -128,7 +129,7 @@ namespace WFACinemaTicketBooking
                 }
                 catch (ArgumentException)
                 {
-                    MessageBox.Show("Error occured on session times. Update is required. Inform your manager!");
+                    MessageBox.Show("Error occurred on session times. Update is required. Inform your manager!");
                 }
             }
             connect();

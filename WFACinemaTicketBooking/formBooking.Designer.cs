@@ -1289,9 +1289,9 @@ namespace WFACinemaTicketBooking
             this.rb_Student.AutoSize = true;
             this.rb_Student.Location = new System.Drawing.Point(6, 71);
             this.rb_Student.Name = "rb_Student";
-            this.rb_Student.Size = new System.Drawing.Size(106, 20);
+            this.rb_Student.Size = new System.Drawing.Size(88, 20);
             this.rb_Student.TabIndex = 72;
-            this.rb_Student.Text = "Student (80 TL)";
+            this.rb_Student.Text = "Young ($16)";
             this.rb_Student.UseVisualStyleBackColor = true;
             this.rb_Student.CheckedChanged += new System.EventHandler(this.rb_TicketType_CheckedChanged);
             // 
@@ -1301,10 +1301,10 @@ namespace WFACinemaTicketBooking
             this.rb_Normal.Checked = true;
             this.rb_Normal.Location = new System.Drawing.Point(6, 49);
             this.rb_Normal.Name = "rb_Normal";
-            this.rb_Normal.Size = new System.Drawing.Size(107, 20);
+            this.rb_Normal.Size = new System.Drawing.Size(91, 20);
             this.rb_Normal.TabIndex = 71;
             this.rb_Normal.TabStop = true;
-            this.rb_Normal.Text = "Normal (100 TL)";
+            this.rb_Normal.Text = "Normal ($20)";
             this.rb_Normal.UseVisualStyleBackColor = true;
             this.rb_Normal.CheckedChanged += new System.EventHandler(this.rb_TicketType_CheckedChanged);
             // 

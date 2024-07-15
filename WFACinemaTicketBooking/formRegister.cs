@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,7 +14,7 @@ namespace WFACinemaTicketBooking
         }
         internal bool isRegistered = false;
 
-        SqlConnection connection = new SqlConnection(@"Data Source =(LocalDB)\MSSQLLocalDB;Initial Catalog=MovieTicketBookingDB;AttachDBFilename=|DataDirectory|\App_Data\MovieTicketBookingDB.mdf;Integrated Security = True;");
+        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         private void btn_Register_Click(object sender, EventArgs e)
         {
             txt_PhoneNumber.Text = txt_PhoneNumber.Text.Replace("+9", "");
@@ -41,8 +42,8 @@ namespace WFACinemaTicketBooking
             }
             connection.Close();
             connection.Open();
-            string sql2 = "insert into tbl_User(name, surname, profession, phoneNumber, email, password) " +
-                "values(@name, @surname, @profession, @phoneNumber, @email, @password)";
+            string sql2 = "insert into tbl_User(name, surname, profession, phoneNumber, email, password, authorization) " +
+                "values(@name, @surname, @profession, @phoneNumber, @email, @password, 'u')";
             SqlCommand cmd = new SqlCommand(sql2, connection);
             cmd.Parameters.AddWithValue("@name", txt_Name.Text);
             cmd.Parameters.AddWithValue("@surname", txt_Surname.Text);
@@ -61,4 +62,3 @@ namespace WFACinemaTicketBooking
 
     }
 }
-
