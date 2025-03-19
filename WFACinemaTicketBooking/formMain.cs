@@ -173,17 +173,11 @@ namespace WFACinemaTicketBooking
         {
             if (cb_Movie.SelectedIndex != -1)
             {
-                connect();
-                SqlCommand cmd = new SqlCommand("select name, director, genre, description from tbl_Movie" +
-                    " INNER JOIN tbl_MovieGenre ON tbl_Movie.genreID=tbl_MovieGenre.genreID where movieID=@movieID", connection);
-                cmd.Parameters.AddWithValue("movieID", cb_Movie.SelectedValue);
-                SqlDataReader dr = cmd.ExecuteReader();
-                if (dr.Read())
+                using (formMovieDetail formMovieDetail = new formMovieDetail())
                 {
-                    MessageBox.Show("Director: " + dr["director"] + "\nGenre: " + dr["genre"] + "\n" + dr["description"],
-                        dr["name"] + " Movie Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    formMovieDetail.movieID = Convert.ToInt32(cb_Movie.SelectedValue);
+                    formMovieDetail.ShowDialog();
                 }
-                connect();
             }
         }
     }
