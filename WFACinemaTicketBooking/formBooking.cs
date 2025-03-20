@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -30,7 +30,7 @@ namespace WFACinemaTicketBooking
         int hallCapacity = 60;
         int price = 20;
 
-        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
+        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
         {
             if (connection.State == ConnectionState.Closed)
@@ -60,7 +60,7 @@ namespace WFACinemaTicketBooking
                 seats.Sort();
                 listChosenSeat();
             }
-            else if (((Button)sender).BackColor == Color.OrangeRed)
+            else if (((Button)sender).BackColor == Color.DarkRed)
             {
                 ((Button)sender).BackColor = Color.LightCoral;
                 cancelSeats.Remove(Convert.ToInt32(((Button)sender).Text));
@@ -69,7 +69,7 @@ namespace WFACinemaTicketBooking
             }
             else if (((Button)sender).BackColor == Color.LightCoral)
             {
-                ((Button)sender).BackColor = Color.OrangeRed;
+                ((Button)sender).BackColor = Color.DarkRed;
                 cancelSeats.Add(Convert.ToInt32(((Button)sender).Text));
                 cancelSeats.Sort();
                 listCancelSeat();
@@ -83,7 +83,7 @@ namespace WFACinemaTicketBooking
                 txt_seatNo.Text += seat + ", ";
             }
             if (seats.Count >= 1)
-                txt_seatNo.Text = txt_seatNo.Text.Remove(txt_seatNo.Text.Length - 2, 2);
+                txt_seatNo.Text = txt_seatNo.Text[..^2];
         }
         void listCancelSeat()
         {
@@ -93,10 +93,10 @@ namespace WFACinemaTicketBooking
                 txt_CancelSeatNo.Text += seat + ", ";
             }
             if (cancelSeats.Count >= 1)
-                txt_CancelSeatNo.Text = txt_CancelSeatNo.Text.Remove(txt_CancelSeatNo.Text.Length - 2, 2);
-        }
+                txt_CancelSeatNo.Text = txt_CancelSeatNo.Text[..^2];
+        }        
 
-        private void FormBooking_Load(object sender, EventArgs e)
+        private void formBooking_Load(object sender, EventArgs e)
         {
             if (!isAuthorized)
             {
@@ -112,7 +112,6 @@ namespace WFACinemaTicketBooking
             getMovieandSessionDetails();
             getTicket();
         }
-
         private int getmovieSessionID()
         {
             int id = 0;
@@ -191,7 +190,8 @@ namespace WFACinemaTicketBooking
             }
             return false;
         }
-        private void btn_BiletAyir_Click(object sender, EventArgs e)
+
+        private void btn_BookTicket_Click(object sender, EventArgs e)
         {
             if (validityCheck(txt_seatNo.Text))
             {
@@ -227,6 +227,7 @@ namespace WFACinemaTicketBooking
             seats.Clear();
             txt_seatNo.Text = "";
         }
+
         private void txt_PhoneNumber_TextChanged(object sender, EventArgs e)
         {
             userID = 0;

@@ -1,8 +1,6 @@
-﻿using WFACinemaTicketBooking.Properties;
-
-namespace WFACinemaTicketBooking
+﻿namespace WFACinemaTicketBooking
 {
-    partial class formAdmin
+    partial class FormAdmin
     {
         /// <summary>
         /// Required designer variable.
@@ -30,79 +28,78 @@ namespace WFACinemaTicketBooking
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formAdmin));
-            this.btn_InsertMovie = new System.Windows.Forms.Button();
-            this.btn_CreateSession = new System.Windows.Forms.Button();
-            this.btn_EditBookings = new System.Windows.Forms.Button();
-            this.btn_BookTicket = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // btn_InsertMovie
-            // 
-            this.btn_InsertMovie.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
-            this.btn_InsertMovie.Location = new System.Drawing.Point(13, 124);
-            this.btn_InsertMovie.Name = "btn_InsertMovie";
-            this.btn_InsertMovie.Size = new System.Drawing.Size(204, 50);
-            this.btn_InsertMovie.TabIndex = 3;
-            this.btn_InsertMovie.Text = "Insert Movie";
-            this.btn_InsertMovie.UseVisualStyleBackColor = true;
-            this.btn_InsertMovie.Click += new System.EventHandler(this.btn_InsertMovie_Click);
-            // 
-            // btn_CreateSession
-            // 
-            this.btn_CreateSession.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
-            this.btn_CreateSession.Location = new System.Drawing.Point(13, 68);
-            this.btn_CreateSession.Name = "btn_CreateSession";
-            this.btn_CreateSession.Size = new System.Drawing.Size(204, 50);
-            this.btn_CreateSession.TabIndex = 2;
-            this.btn_CreateSession.Text = "Create Movie Session";
-            this.btn_CreateSession.UseVisualStyleBackColor = true;
-            this.btn_CreateSession.Click += new System.EventHandler(this.btn_CreateSession_Click);
-            // 
-            // btn_EditBookings
-            // 
-            this.btn_EditBookings.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
-            this.btn_EditBookings.Location = new System.Drawing.Point(13, 180);
-            this.btn_EditBookings.Name = "btn_EditBookings";
-            this.btn_EditBookings.Size = new System.Drawing.Size(204, 50);
-            this.btn_EditBookings.TabIndex = 4;
-            this.btn_EditBookings.Text = "Show/Edit Bookings";
-            this.btn_EditBookings.UseVisualStyleBackColor = true;
-            this.btn_EditBookings.Click += new System.EventHandler(this.btn_BookingAdmin_Click);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAdmin));
+            btn_BookTicket = new System.Windows.Forms.Button();
+            btn_CreateSession = new System.Windows.Forms.Button();
+            btn_InsertMovie = new System.Windows.Forms.Button();
+            btn_EditBookings = new System.Windows.Forms.Button();
+            SuspendLayout();
             // 
             // btn_BookTicket
             // 
-            this.btn_BookTicket.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
-            this.btn_BookTicket.Location = new System.Drawing.Point(13, 12);
-            this.btn_BookTicket.Name = "btn_BookTicket";
-            this.btn_BookTicket.Size = new System.Drawing.Size(204, 50);
-            this.btn_BookTicket.TabIndex = 1;
-            this.btn_BookTicket.Text = "Booking Movie Ticket";
-            this.btn_BookTicket.UseVisualStyleBackColor = true;
-            this.btn_BookTicket.Click += new System.EventHandler(this.btn_Booking_Click);
+            btn_BookTicket.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            btn_BookTicket.Location = new System.Drawing.Point(12, 12);
+            btn_BookTicket.Name = "btn_BookTicket";
+            btn_BookTicket.Size = new System.Drawing.Size(238, 58);
+            btn_BookTicket.TabIndex = 0;
+            btn_BookTicket.Text = "Booking Movie Ticket";
+            btn_BookTicket.UseVisualStyleBackColor = true;
+            btn_BookTicket.Click += btn_BookTicket_Click;
             // 
-            // formAdmin
+            // btn_CreateSession
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(229, 240);
-            this.Controls.Add(this.btn_BookTicket);
-            this.Controls.Add(this.btn_EditBookings);
-            this.Controls.Add(this.btn_InsertMovie);
-            this.Controls.Add(this.btn_CreateSession);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "formAdmin";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Admin Panel";
-            this.ResumeLayout(false);
-
+            btn_CreateSession.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            btn_CreateSession.Location = new System.Drawing.Point(12, 76);
+            btn_CreateSession.Name = "btn_CreateSession";
+            btn_CreateSession.Size = new System.Drawing.Size(238, 58);
+            btn_CreateSession.TabIndex = 1;
+            btn_CreateSession.Text = "Create Movie Session";
+            btn_CreateSession.UseVisualStyleBackColor = true;
+            btn_CreateSession.Click += btn_CreateSession_Click;
+            // 
+            // btn_InsertMovie
+            // 
+            btn_InsertMovie.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            btn_InsertMovie.Location = new System.Drawing.Point(12, 140);
+            btn_InsertMovie.Name = "btn_InsertMovie";
+            btn_InsertMovie.Size = new System.Drawing.Size(238, 58);
+            btn_InsertMovie.TabIndex = 2;
+            btn_InsertMovie.Text = "Insert Movie";
+            btn_InsertMovie.UseVisualStyleBackColor = true;
+            btn_InsertMovie.Click += btn_InsertMovie_Click;
+            // 
+            // btn_EditBookings
+            // 
+            btn_EditBookings.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            btn_EditBookings.Location = new System.Drawing.Point(12, 204);
+            btn_EditBookings.Name = "btn_EditBookings";
+            btn_EditBookings.Size = new System.Drawing.Size(238, 58);
+            btn_EditBookings.TabIndex = 3;
+            btn_EditBookings.Text = "Show/Edit Bookings";
+            btn_EditBookings.UseVisualStyleBackColor = true;
+            btn_EditBookings.Click += btn_EditBookings_Click;
+            // 
+            // FormAdmin
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(264, 277);
+            Controls.Add(btn_EditBookings);
+            Controls.Add(btn_InsertMovie);
+            Controls.Add(btn_CreateSession);
+            Controls.Add(btn_BookTicket);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Name = "FormAdmin";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Admin Panel";
+            ResumeLayout(false);
         }
 
         #endregion
 
-        private System.Windows.Forms.Button btn_InsertMovie;
-        private System.Windows.Forms.Button btn_CreateSession;
-        private System.Windows.Forms.Button btn_EditBookings;
         private System.Windows.Forms.Button btn_BookTicket;
+        private System.Windows.Forms.Button btn_CreateSession;
+        private System.Windows.Forms.Button btn_InsertMovie;
+        private System.Windows.Forms.Button btn_EditBookings;
     }
 }

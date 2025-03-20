@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
+using WFACinemaTicketBooking.Core;
 
 namespace WFACinemaTicketBooking
 {
@@ -19,7 +20,7 @@ namespace WFACinemaTicketBooking
         internal bool adminPanel = false;
         internal bool isAuthorized = false;
 
-        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
+        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
         {
             if (connection.State == ConnectionState.Closed)
@@ -146,23 +147,27 @@ namespace WFACinemaTicketBooking
             this.Hide();
             if (adminPanel)
             {
-                formBookingAdmin formBookingAdmin = new formBookingAdmin();
-                formBookingAdmin.movieID = Convert.ToInt32(cb_Movie.SelectedValue);
-                formBookingAdmin.date = cb_Date.Text;
-                formBookingAdmin.hallID = Convert.ToInt32(cb_Hall.SelectedValue);
-                formBookingAdmin.sessionID = Convert.ToInt32(cb_Session.SelectedValue);
+                formBookingAdmin formBookingAdmin = new ()
+                {
+                    movieID = Convert.ToInt32(cb_Movie.SelectedValue),
+                    date = cb_Date.Text,
+                    hallID = Convert.ToInt32(cb_Hall.SelectedValue),
+                    sessionID = Convert.ToInt32(cb_Session.SelectedValue)
+                };
                 formBookingAdmin.ShowDialog();
             }
             else
             {
-                formBooking formBooking = new formBooking();
-                formBooking.movieID = Convert.ToInt32(cb_Movie.SelectedValue);
-                formBooking.date = cb_Date.Text;
-                formBooking.hallID = Convert.ToInt32(cb_Hall.SelectedValue);
-                formBooking.sessionID = Convert.ToInt32(cb_Session.SelectedValue);
-                formBooking.userID = userID;
-                formBooking.userName = userName;
-                formBooking.isAuthorized = isAuthorized;
+                formBooking formBooking = new ()
+                {
+                    movieID = Convert.ToInt32(cb_Movie.SelectedValue),
+                    date = cb_Date.Text,
+                    hallID = Convert.ToInt32(cb_Hall.SelectedValue),
+                    sessionID = Convert.ToInt32(cb_Session.SelectedValue),
+                    userID = userID,
+                    userName = userName,
+                    isAuthorized = isAuthorized,
+                };
                 formBooking.ShowDialog();
             }
             this.Show();

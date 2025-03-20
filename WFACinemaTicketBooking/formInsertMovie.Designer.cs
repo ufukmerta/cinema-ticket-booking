@@ -29,121 +29,155 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formInsertMovie));
-            this.cb_MovieGenre = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.rTxt_Description = new System.Windows.Forms.RichTextBox();
-            this.txt_Movie = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txt_Director = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btn_Insert = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            cb_MovieGenre = new System.Windows.Forms.ComboBox();
+            label2 = new System.Windows.Forms.Label();
+            rTxt_Description = new System.Windows.Forms.RichTextBox();
+            txt_Movie = new System.Windows.Forms.TextBox();
+            label6 = new System.Windows.Forms.Label();
+            txt_Director = new System.Windows.Forms.TextBox();
+            label5 = new System.Windows.Forms.Label();
+            btn_Insert = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            txt_ImgUrl = new System.Windows.Forms.TextBox();
+            label3 = new System.Windows.Forms.Label();
+            SuspendLayout();
             // 
             // cb_MovieGenre
             // 
-            this.cb_MovieGenre.FormattingEnabled = true;
-            this.cb_MovieGenre.Location = new System.Drawing.Point(131, 79);
-            this.cb_MovieGenre.Name = "cb_MovieGenre";
-            this.cb_MovieGenre.Size = new System.Drawing.Size(296, 21);
-            this.cb_MovieGenre.TabIndex = 3;
+            cb_MovieGenre.FormattingEnabled = true;
+            cb_MovieGenre.Location = new System.Drawing.Point(153, 85);
+            cb_MovieGenre.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cb_MovieGenre.Name = "cb_MovieGenre";
+            cb_MovieGenre.Size = new System.Drawing.Size(345, 23);
+            cb_MovieGenre.TabIndex = 3;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label2.Location = new System.Drawing.Point(44, 112);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 18);
-            this.label2.TabIndex = 39;
-            this.label2.Text = "Description :";
+            label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            label2.Location = new System.Drawing.Point(51, 142);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(81, 18);
+            label2.TabIndex = 39;
+            label2.Text = "Description :";
             // 
             // rTxt_Description
             // 
-            this.rTxt_Description.Location = new System.Drawing.Point(131, 111);
-            this.rTxt_Description.Name = "rTxt_Description";
-            this.rTxt_Description.Size = new System.Drawing.Size(386, 184);
-            this.rTxt_Description.TabIndex = 4;
-            this.rTxt_Description.Text = "";
+            rTxt_Description.Location = new System.Drawing.Point(153, 141);
+            rTxt_Description.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            rTxt_Description.Name = "rTxt_Description";
+            rTxt_Description.Size = new System.Drawing.Size(450, 212);
+            rTxt_Description.TabIndex = 4;
+            rTxt_Description.Text = "";
             // 
             // txt_Movie
             // 
-            this.txt_Movie.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txt_Movie.Location = new System.Drawing.Point(131, 25);
-            this.txt_Movie.Name = "txt_Movie";
-            this.txt_Movie.Size = new System.Drawing.Size(296, 21);
-            this.txt_Movie.TabIndex = 1;
+            txt_Movie.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            txt_Movie.Location = new System.Drawing.Point(153, 23);
+            txt_Movie.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txt_Movie.Name = "txt_Movie";
+            txt_Movie.Size = new System.Drawing.Size(345, 21);
+            txt_Movie.TabIndex = 1;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label6.Location = new System.Drawing.Point(75, 80);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(50, 18);
-            this.label6.TabIndex = 36;
-            this.label6.Text = "Genre :";
+            label6.AutoSize = true;
+            label6.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            label6.Location = new System.Drawing.Point(88, 86);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(50, 18);
+            label6.TabIndex = 36;
+            label6.Text = "Genre :";
             // 
             // txt_Director
             // 
-            this.txt_Director.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.txt_Director.Location = new System.Drawing.Point(131, 52);
-            this.txt_Director.Name = "txt_Director";
-            this.txt_Director.Size = new System.Drawing.Size(296, 21);
-            this.txt_Director.TabIndex = 2;
+            txt_Director.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            txt_Director.Location = new System.Drawing.Point(153, 54);
+            txt_Director.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txt_Director.Name = "txt_Director";
+            txt_Director.Size = new System.Drawing.Size(345, 21);
+            txt_Director.TabIndex = 2;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label5.Location = new System.Drawing.Point(62, 55);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 18);
-            this.label5.TabIndex = 34;
-            this.label5.Text = "Director :";
+            label5.AutoSize = true;
+            label5.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            label5.Location = new System.Drawing.Point(72, 57);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(63, 18);
+            label5.TabIndex = 34;
+            label5.Text = "Director :";
             // 
             // btn_Insert
             // 
-            this.btn_Insert.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
-            this.btn_Insert.Location = new System.Drawing.Point(18, 301);
-            this.btn_Insert.Name = "btn_Insert";
-            this.btn_Insert.Size = new System.Drawing.Size(499, 43);
-            this.btn_Insert.TabIndex = 5;
-            this.btn_Insert.Text = "Insert the Movie";
-            this.btn_Insert.UseVisualStyleBackColor = true;
-            this.btn_Insert.Click += new System.EventHandler(this.btnInsert_Click);
+            btn_Insert.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
+            btn_Insert.Location = new System.Drawing.Point(21, 359);
+            btn_Insert.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btn_Insert.Name = "btn_Insert";
+            btn_Insert.Size = new System.Drawing.Size(582, 50);
+            btn_Insert.TabIndex = 5;
+            btn_Insert.Text = "Insert the Movie";
+            btn_Insert.UseVisualStyleBackColor = true;
+            btn_Insert.Click += btnInsert_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.label1.Location = new System.Drawing.Point(40, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 18);
-            this.label1.TabIndex = 32;
-            this.label1.Text = "Movie Name :";
+            label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            label1.Location = new System.Drawing.Point(47, 26);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(85, 18);
+            label1.TabIndex = 32;
+            label1.Text = "Movie Name :";
+            // 
+            // txt_ImgUrl
+            // 
+            txt_ImgUrl.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            txt_ImgUrl.Location = new System.Drawing.Point(153, 114);
+            txt_ImgUrl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txt_ImgUrl.Name = "txt_ImgUrl";
+            txt_ImgUrl.Size = new System.Drawing.Size(345, 21);
+            txt_ImgUrl.TabIndex = 40;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 162);
+            label3.Location = new System.Drawing.Point(72, 117);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(74, 18);
+            label3.TabIndex = 41;
+            label3.Text = "Image URL :";
             // 
             // formInsertMovie
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 355);
-            this.Controls.Add(this.cb_MovieGenre);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.rTxt_Description);
-            this.Controls.Add(this.txt_Movie);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.txt_Director);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.btn_Insert);
-            this.Controls.Add(this.label1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "formInsertMovie";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Insert a New Movie";
-            this.Load += new System.EventHandler(this.formInsertMovie_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(624, 426);
+            Controls.Add(txt_ImgUrl);
+            Controls.Add(label3);
+            Controls.Add(cb_MovieGenre);
+            Controls.Add(label2);
+            Controls.Add(rTxt_Description);
+            Controls.Add(txt_Movie);
+            Controls.Add(label6);
+            Controls.Add(txt_Director);
+            Controls.Add(label5);
+            Controls.Add(btn_Insert);
+            Controls.Add(label1);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "formInsertMovie";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Insert a New Movie";
+            Load += formInsertMovie_Load;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -158,5 +192,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btn_Insert;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txt_ImgUrl;
+        private System.Windows.Forms.Label label3;
     }
 }

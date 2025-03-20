@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace WFACinemaTicketBooking
@@ -11,7 +11,7 @@ namespace WFACinemaTicketBooking
         {
             InitializeComponent();
         }
-        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
+        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         void connect()
         {
             if (connection.State == ConnectionState.Closed)
@@ -39,10 +39,11 @@ namespace WFACinemaTicketBooking
         private void btnInsert_Click(object sender, System.EventArgs e)
         {
             connect();
-            SqlCommand cmd = new SqlCommand("insert into tbl_Movie(name, director, genreID, description) values(@name,@director,@genreID,@description)", connection);
+            SqlCommand cmd = new SqlCommand("insert into tbl_Movie(name, director, genreID, description,imageUrl) values(@name,@director,@genreID,@description,@imageUrl)", connection);
             cmd.Parameters.AddWithValue("@name", txt_Movie.Text);
             cmd.Parameters.AddWithValue("@director", txt_Director.Text);
             cmd.Parameters.AddWithValue("@genreID", cb_MovieGenre.SelectedValue);
+            cmd.Parameters.AddWithValue("@imageUrl", txt_ImgUrl.Text);
             cmd.Parameters.AddWithValue("@description", rTxt_Description.Text);
             if (cmd.ExecuteNonQuery() == 1)
             {
@@ -50,7 +51,8 @@ namespace WFACinemaTicketBooking
                 txt_Movie.Text = "";
                 txt_Director.Text = "";
                 cb_MovieGenre.SelectedIndex = 0;
-                rTxt_Description.Text = "";
+                txt_ImgUrl.Text = "";
+                rTxt_Description.Text = "";               
             }
             connect();
         }

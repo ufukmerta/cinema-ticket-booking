@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
 using Button = System.Windows.Forms.Button;
@@ -42,7 +42,7 @@ namespace WFACinemaTicketBooking
 
         private void btn_Seat_Click(object sender, EventArgs e)
         {
-            if (((Button)sender).BackColor == Color.OrangeRed)
+            if (((Button)sender).BackColor == Color.DarkRed)
             {
                 ((Button)sender).BackColor = Color.LightCoral;
                 cancelSeats.Remove(Convert.ToInt32(((Button)sender).Text));
@@ -51,7 +51,7 @@ namespace WFACinemaTicketBooking
             }
             else if (((Button)sender).BackColor == Color.LightCoral)
             {
-                ((Button)sender).BackColor = Color.OrangeRed;
+                ((Button)sender).BackColor = Color.DarkRed;
                 cancelSeats.Add(Convert.ToInt32(((Button)sender).Text));
                 cancelSeats.Sort();
                 listCancelSeats();
@@ -75,7 +75,7 @@ namespace WFACinemaTicketBooking
                 txt_CancelSeatNo.Text += seat + ", ";
             }
             if (cancelSeats.Count >= 1)
-                txt_CancelSeatNo.Text = txt_CancelSeatNo.Text.Remove(txt_CancelSeatNo.Text.Length - 2, 2);
+                txt_CancelSeatNo.Text = txt_CancelSeatNo.Text[..^2];
         }
         void findCustomer()
         {

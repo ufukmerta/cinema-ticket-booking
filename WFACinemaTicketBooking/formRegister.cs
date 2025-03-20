@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -13,8 +13,8 @@ namespace WFACinemaTicketBooking
             InitializeComponent();
         }
         internal bool isRegistered = false;
-
-        SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
+        
+        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
         private void btn_Register_Click(object sender, EventArgs e)
         {
             txt_PhoneNumber.Text = txt_PhoneNumber.Text.Replace("+9", "");

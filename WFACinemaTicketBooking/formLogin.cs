@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
 
 namespace WFACinemaTicketBooking
@@ -53,7 +53,7 @@ namespace WFACinemaTicketBooking
                 }
                 if (authorization == 'a')
                 {
-                    formAdmin formAdmin = new formAdmin();
+                    FormAdmin formAdmin = new FormAdmin();
                     this.Hide();
                     formAdmin.ShowDialog();
                     this.Close();

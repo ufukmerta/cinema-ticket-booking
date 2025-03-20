@@ -3,22 +3,25 @@ using System.Windows.Forms;
 
 namespace WFACinemaTicketBooking
 {
-    public partial class formAdmin : Form
+    public partial class FormAdmin : Form
     {
-        public formAdmin()
+        public FormAdmin()
         {
             InitializeComponent();
         }
 
-        private void btn_Booking_Click(object sender, EventArgs e)
+        private void btn_BookTicket_Click(object sender, EventArgs e)
         {
-            formMain formMain = new formMain();
-            formMain.adminPanel = false;
-            formMain.isAuthorized = true;
+            formMain formMain = new formMain
+            {
+                adminPanel = false,
+                isAuthorized = true
+            };
             this.Hide();
             formMain.ShowDialog();
             this.Show();
         }
+
         private void btn_CreateSession_Click(object sender, EventArgs e)
         {
             formCreateSession formCreateSession = new formCreateSession();
@@ -34,10 +37,13 @@ namespace WFACinemaTicketBooking
             formInsertMovie.ShowDialog();
             this.Show();
         }
-        private void btn_BookingAdmin_Click(object sender, EventArgs e)
+
+        private void btn_EditBookings_Click(object sender, EventArgs e)
         {
-            formMain formMain = new formMain();
-            formMain.adminPanel = true;
+            formMain formMain = new formMain
+            {
+                adminPanel = true
+            };
             this.Hide();
             formMain.ShowDialog();
             this.Show();
