@@ -3,7 +3,6 @@ using System.Configuration;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
-using WFACinemaTicketBooking.Core;
 
 namespace WFACinemaTicketBooking
 {
