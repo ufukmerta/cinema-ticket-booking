@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Configuration;
-using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
+using WFACinemaTicketBooking.Data;
+using System.Linq;
+using WFACinemaTicketBooking.Models;
 
 namespace WFACinemaTicketBooking
 {
@@ -27,42 +28,39 @@ namespace WFACinemaTicketBooking
         //user's auth needs to set a for admin and s for ticket seller.
         private void btn_Login_Click(object sender, EventArgs e)
         {
-            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
-            connection.Open();
-            string sql = "select userID, name, surname, auth from tbl_User where email=@email and password=@password";
-            SqlCommand cmd = new SqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("@email", txt_Email.Text);
-            cmd.Parameters.AddWithValue("@password", txt_Password.Text);
-            SqlDataReader dr = cmd.ExecuteReader();
-            if (dr.Read())
+            using (MovieTicketBookingContext dbContext = new MovieTicketBookingContext())
             {
-                string userName = dr[1].ToString() + " " + dr[2].ToString();
-                bool isAuthorized = false;
-                char authorization = Convert.ToChar(dr[3]);
-                if (authorization == 'a' || authorization == 's')//a is the admin user, s is the ticket seller user.
-                    isAuthorized = true;
-                if (authorization == 'u' || authorization == 's')//u is the normal user.
+                User user = dbContext.Users.Where(x => x.Email == txt_Email.Text && x.Password == txt_Password.Text).FirstOrDefault();
+                if (user != null)
                 {
-                    formMain formMain = new formMain();
-                    formMain.userID = Convert.ToInt32(dr[0]);
-                    formMain.userName = userName.Trim();
-                    formMain.isAuthorized = isAuthorized;
-                    this.Hide();
-                    formMain.ShowDialog();
-                    this.Close();
+                    string userName = user.Name + " " + user.Surname;
+                    bool isAuthorized = false;
+                    char authorization = Convert.ToChar(user.Auth);
+                    if (authorization == 'a' || authorization == 's')//a is the admin user, s is the ticket seller user.
+                        isAuthorized = true;
+                    if (authorization == 'u' || authorization == 's')//u is the normal user.
+                    {
+                        formMain formMain = new formMain();
+                        formMain.userID = Convert.ToInt32(user.UserId);
+                        formMain.userName = userName.Trim();
+                        formMain.isAuthorized = isAuthorized;
+                        this.Hide();
+                        formMain.ShowDialog();
+                        this.Close();
+                    }
+                    if (authorization == 'a')
+                    {
+                        FormAdmin formAdmin = new FormAdmin();
+                        this.Hide();
+                        formAdmin.ShowDialog();
+                        this.Close();
+                    }
+                    Application.Exit();
                 }
-                if (authorization == 'a')
+                else
                 {
-                    FormAdmin formAdmin = new FormAdmin();
-                    this.Hide();
-                    formAdmin.ShowDialog();
-                    this.Close();
+                    MessageBox.Show("Email or password is incorrect");
                 }
-                Application.Exit();
-            }
-            else
-            {
-                MessageBox.Show("Email or password is incorrect");
             }
         }
 
