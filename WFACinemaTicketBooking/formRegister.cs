@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Configuration;
-using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
+using WFACinemaTicketBooking.Data;
+using WFACinemaTicketBooking.Models;
 
 namespace WFACinemaTicketBooking
 {
@@ -13,8 +13,7 @@ namespace WFACinemaTicketBooking
             InitializeComponent();
         }
         internal bool isRegistered = false;
-        
-        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
+
         private void btn_Register_Click(object sender, EventArgs e)
         {
             txt_PhoneNumber.Text = txt_PhoneNumber.Text.Replace("+9", "");
@@ -28,37 +27,34 @@ namespace WFACinemaTicketBooking
                 MessageBox.Show("Please fill all the blanks.");
                 return;
             }
-
-            string sql1 = "SELECT COUNT(*) FROM tbl_User WHERE phoneNumber=@phoneNumber OR email=@email";
-            SqlCommand cmdControl = new SqlCommand(sql1, connection);
-            cmdControl.Parameters.AddWithValue("@phoneNumber", txt_PhoneNumber.Text);
-            cmdControl.Parameters.AddWithValue("@email", txt_Email.Text);
-            connection.Open();
-            if ((int)cmdControl.ExecuteScalar() != 0)
+            using (MovieTicketBookingContext dbContext = new MovieTicketBookingContext())
             {
-                MessageBox.Show("Typed phone number or email adress is already registered.");
-                connection.Close();
-                return;
+                int count = dbContext.Users.Where(x => x.PhoneNumber == txt_PhoneNumber.Text || x.Email == txt_Email.Text).Count();
+                if (count != 0)
+                {
+                    MessageBox.Show("Typed phone number or email adress is already registered.");
+                    return;
+                }
             }
-            connection.Close();
-            connection.Open();
-            string sql2 = "insert into tbl_User(name, surname, profession, phoneNumber, email, password, authorization) " +
-                "values(@name, @surname, @profession, @phoneNumber, @email, @password, 'u')";
-            SqlCommand cmd = new SqlCommand(sql2, connection);
-            cmd.Parameters.AddWithValue("@name", txt_Name.Text);
-            cmd.Parameters.AddWithValue("@surname", txt_Surname.Text);
-            cmd.Parameters.AddWithValue("@profession", txt_Profession.Text);
-            cmd.Parameters.AddWithValue("@phoneNumber", txt_PhoneNumber.Text);
-            cmd.Parameters.AddWithValue("@email", txt_Email.Text);
-            cmd.Parameters.AddWithValue("@password", txt_Password.Text);
-            if (cmd.ExecuteNonQuery() == 1)
+            using (MovieTicketBookingContext dbContext = new MovieTicketBookingContext())
             {
-                MessageBox.Show("You registered succesfully!");
-                isRegistered = true;
+                User user = new User
+                {
+                    Name = txt_Name.Text,
+                    Surname = txt_Surname.Text,
+                    Profession = txt_Profession.Text,
+                    PhoneNumber = txt_PhoneNumber.Text,
+                    Email = txt_Email.Text,
+                    Password = txt_Password.Text
+                };
+                dbContext.Users.Add(user);                
+                if (dbContext.SaveChanges() == 1)
+                {
+                    MessageBox.Show("You registered succesfully!");
+                    isRegistered = true;
+                }                
+                Close();
             }
-            connection.Close();
-            this.Close();
         }
-
     }
 }
