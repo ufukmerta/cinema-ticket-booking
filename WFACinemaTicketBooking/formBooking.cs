@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Configuration;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
+using WFACinemaTicketBooking.Data;
+using System.Linq;
+using WFACinemaTicketBooking.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 
 namespace WFACinemaTicketBooking
@@ -15,33 +18,21 @@ namespace WFACinemaTicketBooking
         {
             InitializeComponent();
         }
-        ArrayList seats = new ArrayList();
-        ArrayList cancelSeats = new ArrayList();
-        internal int movieID = 0;
+        private ArrayList seats = new();
+        private ArrayList cancelSeats = new();
+        internal int movieID = -1;
+        internal int hallID = -1;
         internal string date = "";
-        internal int hallID = 0;
-        internal int sessionID = 0;
+        private DateTime sessionTime;
+        internal int sessionID = -1;
 
-        internal int userID = 0;
+        internal int userID = -1;
         internal string userName = "";
         internal bool isAuthorized = false;
 
-        int movieSessionID = 0;
+        internal int movieSessionID = -1;
         int hallCapacity = 60;
         int price = 20;
-
-        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
-        void connect()
-        {
-            if (connection.State == ConnectionState.Closed)
-            {
-                connection.Open();
-            }
-            else
-            {
-                connection.Close();
-            }
-        }
 
         private void btn_Seat_Click(object sender, EventArgs e)
         {
@@ -50,7 +41,7 @@ namespace WFACinemaTicketBooking
                 ((Button)sender).BackColor = Color.Orange;
                 seats.Add(Convert.ToInt32(((Button)sender).Text));
                 seats.Sort();
-                listChosenSeat();
+                listChosenSeat(seats, txt_seatNo);
 
             }
             else if (((Button)sender).BackColor == Color.Orange)
@@ -58,43 +49,33 @@ namespace WFACinemaTicketBooking
                 ((Button)sender).BackColor = Color.Lime;
                 seats.Remove(Convert.ToInt32(((Button)sender).Text));
                 seats.Sort();
-                listChosenSeat();
+                listChosenSeat(seats, txt_seatNo);
             }
             else if (((Button)sender).BackColor == Color.DarkRed)
             {
                 ((Button)sender).BackColor = Color.LightCoral;
                 cancelSeats.Remove(Convert.ToInt32(((Button)sender).Text));
                 cancelSeats.Sort();
-                listCancelSeat();
+                listChosenSeat(cancelSeats, txt_CancelSeatNo);
             }
             else if (((Button)sender).BackColor == Color.LightCoral)
             {
                 ((Button)sender).BackColor = Color.DarkRed;
                 cancelSeats.Add(Convert.ToInt32(((Button)sender).Text));
                 cancelSeats.Sort();
-                listCancelSeat();
+                listChosenSeat(cancelSeats, txt_CancelSeatNo);
             }
         }
-        void listChosenSeat()
+        void listChosenSeat(ArrayList seatArray, TextBox txtBox)
         {
-            txt_seatNo.Text = "";
-            foreach (object seat in seats)
+            txtBox.Text = "";
+            foreach (object seat in seatArray)
             {
-                txt_seatNo.Text += seat + ", ";
+                txtBox.Text += seat + ", ";
             }
-            if (seats.Count >= 1)
-                txt_seatNo.Text = txt_seatNo.Text[..^2];
+            if (seatArray.Count >= 1)
+                txtBox.Text = txtBox.Text[..^2];
         }
-        void listCancelSeat()
-        {
-            txt_CancelSeatNo.Text = "";
-            foreach (object seat in cancelSeats)
-            {
-                txt_CancelSeatNo.Text += seat + ", ";
-            }
-            if (cancelSeats.Count >= 1)
-                txt_CancelSeatNo.Text = txt_CancelSeatNo.Text[..^2];
-        }        
 
         private void formBooking_Load(object sender, EventArgs e)
         {
@@ -102,85 +83,89 @@ namespace WFACinemaTicketBooking
             {
                 txt_UserName.Text = userName;
                 txt_PhoneNumber.Visible = false;
-                label8.Visible = false;
-                btn_BookTicket.Top = 60;
+                label11.Visible = false;
                 btn_BookTicket.Enabled = true;
                 btn_CancelTicket.Enabled = true;
                 btn_FindCustomer.Visible = false;
             }
-            movieSessionID = getmovieSessionID();
-            getMovieandSessionDetails();
+            movieSessionID = getmovieSession();
+            if (movieSessionID == -1)
+            {
+                MessageBox.Show("We are sorry. This movie session cannot be found. Please try again or look at different session.");
+                Close();
+            }
             getTicket();
         }
-        private int getmovieSessionID()
+        private int getmovieSession()
         {
-            int id = 0;
-            connect();
-            SqlCommand cmd = new SqlCommand("select movieSessionID from tbl_MovieSession where " +
-                "movieID=@movieID and hallID=@hallID and date=@date and sessionID=@sessionID", connection);
-            cmd.Parameters.AddWithValue("@movieID", movieID);
-            cmd.Parameters.AddWithValue("@hallID", hallID);
-            cmd.Parameters.AddWithValue("@date", date);
-            cmd.Parameters.AddWithValue("@sessionID", sessionID);
-            SqlDataReader dr = cmd.ExecuteReader();
-            if (dr.Read())
+            int id = -1;
+            using (MovieTicketBookingContext dbContext = new())
             {
-                id = Convert.ToInt32(dr["movieSessionID"]);
+                var movieSession = dbContext.MovieSessions
+                    .Where(x => x.MovieId == movieID && x.HallId == hallID && x.Date == DateOnly.FromDateTime(DateTime.Parse(date)) && x.SessionId == sessionID)
+                    .Select(x => new { x.MovieSessionId, MovieName = x.Movie.Name, HallName = x.Hall.Name, x.Hall.HallCapacity, x.Date, x.Session.Hour }).FirstOrDefault();
+                if (movieSession != null)
+                {
+                    id = movieSession.MovieSessionId;
+                    lbl_MovieName.Text = movieSession.MovieName;
+                    lbl_MovieSession.Text = movieSession.HallName + " / " + movieSession.Date + " / " + movieSession.Hour;
+                    hallCapacity = movieSession.HallCapacity;
+                    sessionTime = DateTime.ParseExact(movieSession.Date + " " + movieSession.Hour, "yyyy-MM-dd hh:mm", CultureInfo.InvariantCulture);
+
+                }
             }
-            connect();
             return id;
-        }
-        void getMovieandSessionDetails()
-        {
-            connect();
-            SqlCommand cmd = new SqlCommand("select tbl_Movie.name,tbl_Hall.name,tbl_Session.hour,tbl_Hall.hallCapacity from tbl_MovieSession " +
-                "INNER JOIN tbl_Movie ON tbl_MovieSession.movieID=tbl_Movie.movieID " +
-                "INNER JOIN tbl_Hall ON tbl_MovieSession.hallID=tbl_Hall.hallID " +
-                "INNER JOIN tbl_Session ON tbl_MovieSession.sessionID=tbl_Session.sessionID where movieSessionID=@movieSessionID", connection);
-            cmd.Parameters.AddWithValue("@movieSessionID", movieSessionID);
-            SqlDataReader dr = cmd.ExecuteReader();
-            if (dr.Read())
-            {
-                lbl_MovieName.Text = dr[0].ToString();
-                lbl_MovieSession.Text = dr[1].ToString() + " / " + date + " / " + dr[2].ToString();
-                hallCapacity = Convert.ToInt32(dr[3]);
-            }
-            dr.Close();
-            connect();
         }
         private void getTicket()
         {
-            connect();
-            SqlCommand cmd = new SqlCommand("select seatNo,userID from tbl_TicketBooking where movieSessionID=@movieSessionID", connection);
-            cmd.Parameters.AddWithValue("@movieSessionID", movieSessionID);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
+            for (int i = 1; i <= hallCapacity; i++)
             {
-                if (userID != Convert.ToInt32(dr[1]))
+                Controls.Find("btn" + i, true)[0].BackColor = Color.Lime;
+                Controls.Find("btn" + i, true)[0].Enabled = Enabled;
+            }
+            gb_CancelSeat.Visible = false;
+            using (MovieTicketBookingContext dbContext = new())
+            {
+                var tickets = dbContext.TicketBookings.Include(x => x.User).Where(x =>
+                x.MovieSessionId == movieSessionID).ToList();
+                foreach (var ticket in tickets)
                 {
-                    this.Controls.Find("btn" + Convert.ToInt32(dr[0]), true)[0].BackColor = Color.Red;
-                    this.Controls.Find("btn" + Convert.ToInt32(dr[0]), true)[0].Enabled = false;
-                }
-                else
-                {
-                    this.Controls.Find("btn" + Convert.ToInt32(dr[0]), true)[0].BackColor = Color.LightCoral;
-                    this.Controls.Find("btn" + Convert.ToInt32(dr[0]), true)[0].Enabled = Enabled;
+                    ToolTip tool = new();
+                    Button btn = (Button)Controls.Find("btn" + Convert.ToInt32(ticket.SeatNo), true)[0];
+                    tool.SetToolTip(btn, ticket.User.Name + " " + ticket.User.Surname);
+                    if (userID != Convert.ToInt32(ticket.User.UserId))
+                    {
+                        btn.BackColor = Color.Red;
+                        Controls.Find("btn" + Convert.ToInt32(ticket.SeatNo), true)[0].Enabled = false;
+                    }
+                    else
+                    {
+                        Controls.Find("btn" + Convert.ToInt32(ticket.SeatNo), true)[0].BackColor = Color.LightCoral;
+                        Controls.Find("btn" + Convert.ToInt32(ticket.SeatNo), true)[0].Enabled = Enabled;
+                        gb_CancelSeat.Visible = true;
+                    }
                 }
             }
             for (int i = hallCapacity + 1; i <= 60; i++)
             {
-                this.Controls.Find("btn" + i, true)[0].BackColor = Color.Red;
-                this.Controls.Find("btn" + i, true)[0].Enabled = false;
+                Controls.Find("btn" + i, true)[0].BackColor = Color.Red;
+                Controls.Find("btn" + i, true)[0].Enabled = false;
             }
-            connect();
         }
 
         bool validityCheck(string chosenTicket)
         {
             if (chosenTicket != "")
             {
-                if (userID != 0)
+                if (userID != -1)
                 {
+                    if (sessionTime <= DateTime.Now)
+                    {
+                        MessageBox.Show("This session is already passed. You cannot book/cancel a ticket for this session.");
+                        movieSessionID = -1;
+                        Close();
+                        return false;
+                    }
                     return true;
                 }
             }
@@ -201,36 +186,45 @@ namespace WFACinemaTicketBooking
 
         void bookTicket()
         {
-            connect();
-            int ins = 0;
-            for (int i = 0; i < seats.Count; i++)
+            using (MovieTicketBookingContext dbContext = new())
             {
-                SqlCommand cmd = new SqlCommand("insert into tbl_TicketBooking(movieSessionID, userID, seatNo, price) " +
-                    "values(@movieSessionID,@userID,@seatNo,@price)", connection);
-                cmd.Parameters.AddWithValue("@movieSessionID", movieSessionID);
-                cmd.Parameters.AddWithValue("@userID", userID);
-                cmd.Parameters.AddWithValue("@seatNo", seats[i]);
-                cmd.Parameters.AddWithValue("@price", price);
-                ins += cmd.ExecuteNonQuery();
-                this.Controls.Find("btn" + seats[i].ToString(), true)[0].BackColor = Color.LightCoral;
+                for (int i = 0; i < seats.Count; i++)
+                {
+                    dbContext.TicketBookings.Add(new TicketBooking
+                    {
+                        MovieSessionId = movieSessionID,
+                        UserId = userID,
+                        SeatNo = Convert.ToInt32(seats[i]),
+                        Price = price
+                    });
+                    Controls.Find("btn" + seats[i].ToString(), true)[0].BackColor = Color.LightCoral;
+                }
+                int c = dbContext.SaveChanges();
+                if (c == seats.Count)
+                {
+                    if (txt_seatNo.TextLength <= 2 && isAuthorized)
+                        MessageBox.Show("Number " + txt_seatNo.Text + " seat is booked by " + txt_UserName.Text);
+                    else if (txt_seatNo.TextLength > 2 && isAuthorized)
+                        MessageBox.Show("Number " + txt_seatNo.Text + " seats are booked by " + txt_UserName.Text);
+                    else if (txt_seatNo.TextLength <= 2 && !isAuthorized)
+                        MessageBox.Show("You (" + txt_UserName.Text + ") booked number " + txt_seatNo.Text + " seat.");
+                    else if (txt_seatNo.TextLength > 2 && !isAuthorized)
+                        MessageBox.Show("You (" + txt_UserName.Text + ") booked number " + txt_seatNo.Text + " seats.");
+                    seats.Clear();
+
+                }
+                else
+                {
+                    MessageBox.Show("One or more ticket(s) couldn't be booked successfully.");
+                }
             }
-            connect();
-            MessageBox.Show(ins.ToString());
-            if (txt_seatNo.TextLength <= 2 && isAuthorized)
-                MessageBox.Show("Number " + txt_seatNo.Text + " seat is booked by " + txt_UserName.Text);
-            else if (txt_seatNo.TextLength > 2 && isAuthorized)
-                MessageBox.Show("Number " + txt_seatNo.Text + " seat is booked by " + txt_UserName.Text);
-            else if (txt_seatNo.TextLength <= 2 && !isAuthorized)
-                MessageBox.Show("You (" + txt_UserName.Text + ") booked number " + txt_seatNo.Text + " seat.");
-            else if (txt_seatNo.TextLength > 2 && !isAuthorized)
-                MessageBox.Show("You (" + txt_UserName.Text + ") booked number " + txt_seatNo.Text + " seats.");
-            seats.Clear();
             txt_seatNo.Text = "";
+            getTicket();//make sure that the tickets are shown correctly because of the error(s) or another client edited the tickets.
         }
 
         private void txt_PhoneNumber_TextChanged(object sender, EventArgs e)
         {
-            userID = 0;
+            userID = -1;
             txt_UserName.Text = "";
             btn_BookTicket.Enabled = btn_CancelTicket.Enabled = false;
         }
@@ -245,23 +239,29 @@ namespace WFACinemaTicketBooking
 
         private void btn_FindCustomer_Click(object sender, EventArgs e)
         {
-            connect();
-            SqlCommand cmd = new SqlCommand("select userID, name, surname from tbl_User where phoneNumber=@phoneNumber", connection);
-            cmd.Parameters.AddWithValue("@phoneNumber", txt_PhoneNumber.Text);
-            SqlDataReader dr = cmd.ExecuteReader();
-            if (dr.Read())
+            if (txt_PhoneNumber.Text != "")
             {
-                userID = Convert.ToInt32(dr[0]);
-                txt_UserName.Text = dr[1].ToString() + " " + dr[2].ToString();
-                btn_BookTicket.Enabled = btn_CancelTicket.Enabled = true;
+                findCustomer();
             }
-            else
+        }
+        void findCustomer()
+        {
+            using (MovieTicketBookingContext dbContext = new())
             {
-                userID = 0;
-                MessageBox.Show("Customer cannot be found with given phone number!");
-                btn_BookTicket.Enabled = btn_CancelTicket.Enabled = false;
+                var user = dbContext.Users.Where(x => x.PhoneNumber == txt_PhoneNumber.Text).FirstOrDefault();
+                if (user != null)
+                {
+                    userID = user.UserId;
+                    txt_UserName.Text = user.Name + " " + user.Surname;
+                    btn_BookTicket.Enabled = btn_CancelTicket.Enabled = true;
+                }
+                else
+                {
+                    userID = -1;
+                    MessageBox.Show("Customer cannot be found with given phone number!");
+                    btn_BookTicket.Enabled = btn_CancelTicket.Enabled = false;
+                }
             }
-            connect();
             getTicket();
         }
 
@@ -275,25 +275,39 @@ namespace WFACinemaTicketBooking
 
         private void cancelTicket()
         {
-            connect();
-            for (int i = 0; i < cancelSeats.Count; i++)
+            using (MovieTicketBookingContext dbContext = new())
             {
-                SqlCommand cmd = new SqlCommand("delete from tbl_TicketBooking where movieSessionID=@movieSessionID and seatNo=@seatNo", connection);
-                cmd.Parameters.AddWithValue("@movieSessionID", movieSessionID);
-                cmd.Parameters.AddWithValue("@seatNo", cancelSeats[i]);
-                cmd.ExecuteNonQuery();
-                this.Controls.Find("btn" + cancelSeats[i].ToString(), true)[0].BackColor = Color.Lime;
+                for (int i = 0; i < cancelSeats.Count; i++)
+                {
+                    var ticket = dbContext.TicketBookings
+                        .Where(x =>
+                            x.SeatNo == Convert.ToInt32(cancelSeats[i]) &&
+                            x.UserId == userID &&
+                            x.MovieSessionId == movieSessionID)
+                        .FirstOrDefault();
+                    dbContext.TicketBookings.Remove(ticket);
+                    Controls.Find("btn" + cancelSeats[i].ToString(), true)[0].BackColor = Color.Lime;
+                }
+                int c = dbContext.SaveChanges();
+                if (c == cancelSeats.Count)
+                {
+                    if (txt_CancelSeatNo.TextLength <= 2 && isAuthorized)
+                        MessageBox.Show("Number " + txt_CancelSeatNo.Text + " seat of " + txt_UserName.Text + " customer's booked ticket is canceled.");
+                    else if (txt_CancelSeatNo.TextLength > 2 && isAuthorized)
+                        MessageBox.Show("Number " + txt_CancelSeatNo.Text + " seats of " + txt_UserName.Text + " customer's booked tickets are canceled.");
+                    else if (txt_CancelSeatNo.TextLength <= 2 && !isAuthorized)
+                        MessageBox.Show("You (" + txt_UserName.Text + ") canceled your booked number " + txt_CancelSeatNo.Text + " seat.");
+                    else if (txt_CancelSeatNo.TextLength > 2 && !isAuthorized)
+                        MessageBox.Show("You (" + txt_UserName.Text + ") canceled your booked number " + txt_CancelSeatNo.Text + " seats.");
+                }
+                else
+                {
+                    MessageBox.Show("One or more booked ticket of customer couldn't be canceled successfully.");
+                }
+                cancelSeats.Clear();
+                txt_CancelSeatNo.Text = "";
             }
-            connect();
-            if (txt_CancelSeatNo.TextLength <= 2 && isAuthorized)
-                MessageBox.Show("Number " + txt_CancelSeatNo.Text + " seat of " + txt_UserName.Text + " customer's booked ticket is canceled.");
-            else if (txt_CancelSeatNo.TextLength > 2 && isAuthorized)
-                MessageBox.Show("Number " + txt_CancelSeatNo.Text + " seats of " + txt_UserName.Text + " customer's booked tickets are canceled.");
-            else if (txt_CancelSeatNo.TextLength <= 2 && !isAuthorized)
-                MessageBox.Show("You (" + txt_UserName.Text + ") canceled your booked number " + txt_CancelSeatNo.Text + " seat.");
-            else if (txt_CancelSeatNo.TextLength > 2 && !isAuthorized)
-                MessageBox.Show("You (" + txt_UserName.Text + ") canceled your booked number " + txt_CancelSeatNo.Text + " seats.");
-            cancelSeats.Clear();
+            getTicket();//make sure that the tickets are shown correctly because of the error(s) or another client edited the tickets 
         }
     }
 }

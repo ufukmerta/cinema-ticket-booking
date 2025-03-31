@@ -104,7 +104,7 @@
             btn59 = new System.Windows.Forms.Button();
             btn60 = new System.Windows.Forms.Button();
             groupBox6 = new System.Windows.Forms.GroupBox();
-            gbBiletİptal = new System.Windows.Forms.GroupBox();
+            gb_CancelSeat = new System.Windows.Forms.GroupBox();
             label23 = new System.Windows.Forms.Label();
             txt_CancelSeatNo = new System.Windows.Forms.TextBox();
             btn_CancelTicket = new System.Windows.Forms.Button();
@@ -135,7 +135,7 @@
             groupBox4.SuspendLayout();
             groupBox5.SuspendLayout();
             groupBox6.SuspendLayout();
-            gbBiletİptal.SuspendLayout();
+            gb_CancelSeat.SuspendLayout();
             groupBox7.SuspendLayout();
             SuspendLayout();
             // 
@@ -1091,7 +1091,7 @@
             // 
             // groupBox6
             // 
-            groupBox6.Controls.Add(gbBiletİptal);
+            groupBox6.Controls.Add(gb_CancelSeat);
             groupBox6.Controls.Add(label20);
             groupBox6.Controls.Add(label9);
             groupBox6.Controls.Add(label10);
@@ -1115,16 +1115,16 @@
             // 
             // gbBiletİptal
             // 
-            gbBiletİptal.Controls.Add(label23);
-            gbBiletİptal.Controls.Add(txt_CancelSeatNo);
-            gbBiletİptal.Controls.Add(btn_CancelTicket);
-            gbBiletİptal.Location = new System.Drawing.Point(433, 8);
-            gbBiletİptal.Name = "gbBiletİptal";
-            gbBiletİptal.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            gbBiletİptal.Size = new System.Drawing.Size(299, 147);
-            gbBiletİptal.TabIndex = 51;
-            gbBiletİptal.TabStop = false;
-            gbBiletİptal.Text = "Cancel Ticket(s)";
+            gb_CancelSeat.Controls.Add(label23);
+            gb_CancelSeat.Controls.Add(txt_CancelSeatNo);
+            gb_CancelSeat.Controls.Add(btn_CancelTicket);
+            gb_CancelSeat.Location = new System.Drawing.Point(433, 8);
+            gb_CancelSeat.Name = "gbBiletİptal";
+            gb_CancelSeat.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gb_CancelSeat.Size = new System.Drawing.Size(299, 147);
+            gb_CancelSeat.TabIndex = 51;
+            gb_CancelSeat.TabStop = false;
+            gb_CancelSeat.Text = "Cancel Ticket(s)";
             // 
             // label23
             // 
@@ -1243,7 +1243,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new System.Drawing.Point(11, 43);
+            label8.Location = new System.Drawing.Point(14, 43);
             label8.Margin = new System.Windows.Forms.Padding(3);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(70, 16);
@@ -1253,7 +1253,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new System.Drawing.Point(14, 73);
+            label11.Location = new System.Drawing.Point(16, 73);
             label11.Margin = new System.Windows.Forms.Padding(3);
             label11.Name = "label11";
             label11.Size = new System.Drawing.Size(68, 16);
@@ -1400,8 +1400,8 @@
             groupBox5.ResumeLayout(false);
             groupBox6.ResumeLayout(false);
             groupBox6.PerformLayout();
-            gbBiletİptal.ResumeLayout(false);
-            gbBiletİptal.PerformLayout();
+            gb_CancelSeat.ResumeLayout(false);
+            gb_CancelSeat.PerformLayout();
             groupBox7.ResumeLayout(false);
             groupBox7.PerformLayout();
             ResumeLayout(false);
@@ -1485,7 +1485,7 @@
         private System.Windows.Forms.Button btn59;
         private System.Windows.Forms.Button btn60;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.GroupBox gbBiletİptal;
+        private System.Windows.Forms.GroupBox gb_CancelSeat;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox txt_CancelSeatNo;
         private System.Windows.Forms.Button btn_CancelTicket;

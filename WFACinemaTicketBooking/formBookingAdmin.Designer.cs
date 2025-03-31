@@ -186,7 +186,7 @@ namespace WFACinemaTicketBooking
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new System.Drawing.Point(10, 46);
+            label7.Location = new System.Drawing.Point(11, 44);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(70, 16);
             label7.TabIndex = 41;
@@ -195,7 +195,7 @@ namespace WFACinemaTicketBooking
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new System.Drawing.Point(16, 74);
+            label8.Location = new System.Drawing.Point(16, 71);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(65, 16);
             label8.TabIndex = 43;
@@ -204,7 +204,7 @@ namespace WFACinemaTicketBooking
             // txt_UserName
             // 
             txt_UserName.Enabled = false;
-            txt_UserName.Location = new System.Drawing.Point(100, 42);
+            txt_UserName.Location = new System.Drawing.Point(100, 41);
             txt_UserName.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             txt_UserName.Name = "txt_UserName";
             txt_UserName.Size = new System.Drawing.Size(187, 20);
@@ -212,7 +212,7 @@ namespace WFACinemaTicketBooking
             // 
             // txt_PhoneNumber
             // 
-            txt_PhoneNumber.Location = new System.Drawing.Point(100, 70);
+            txt_PhoneNumber.Location = new System.Drawing.Point(100, 69);
             txt_PhoneNumber.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             txt_PhoneNumber.Name = "txt_PhoneNumber";
             txt_PhoneNumber.Size = new System.Drawing.Size(187, 20);
@@ -222,7 +222,7 @@ namespace WFACinemaTicketBooking
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new System.Drawing.Point(29, 16);
+            label23.Location = new System.Drawing.Point(27, 16);
             label23.Name = "label23";
             label23.Size = new System.Drawing.Size(54, 16);
             label23.TabIndex = 33;
