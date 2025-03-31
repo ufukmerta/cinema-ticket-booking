@@ -1,6 +1,6 @@
 ﻿namespace WFACinemaTicketBooking
 {
-    partial class FormAdmin
+    partial class formAdmin
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAdmin));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formAdmin));
             btn_BookTicket = new System.Windows.Forms.Button();
             btn_CreateSession = new System.Windows.Forms.Button();
             btn_InsertMovie = new System.Windows.Forms.Button();
@@ -89,7 +89,7 @@
             Controls.Add(btn_CreateSession);
             Controls.Add(btn_BookTicket);
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
-            Name = "FormAdmin";
+            Name = "formAdmin";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "Admin Panel";
             ResumeLayout(false);

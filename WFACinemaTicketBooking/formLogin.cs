@@ -50,7 +50,7 @@ namespace WFACinemaTicketBooking
                     }
                     if (authorization == 'a')
                     {
-                        FormAdmin formAdmin = new FormAdmin();
+                        formAdmin formAdmin = new formAdmin();
                         this.Hide();
                         formAdmin.ShowDialog();
                         this.Close();

@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace WFACinemaTicketBooking
 {
-    public partial class FormAdmin : Form
+    public partial class formAdmin : Form
     {
-        public FormAdmin()
+        public formAdmin()
         {
             InitializeComponent();
         }
