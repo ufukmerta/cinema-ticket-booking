@@ -16,7 +16,7 @@ namespace WFACinemaTicketBooking
 
         private void btn_Register_Click(object sender, EventArgs e)
         {
-            txt_PhoneNumber.Text = txt_PhoneNumber.Text.Replace("+9", "");
+            txt_PhoneNumber.Text = txt_PhoneNumber.Text.Replace("+", "");
             if (!txt_PhoneNumber.Text.All(char.IsNumber) || txt_PhoneNumber.Text == "")
             {
                 MessageBox.Show("Invalid phone number");
@@ -27,7 +27,7 @@ namespace WFACinemaTicketBooking
                 MessageBox.Show("Please fill all the blanks.");
                 return;
             }
-            using (MovieTicketBookingContext dbContext = new MovieTicketBookingContext())
+            using (MovieTicketBookingContext dbContext = new())
             {
                 int count = dbContext.Users.Where(x => x.PhoneNumber == txt_PhoneNumber.Text || x.Email == txt_Email.Text).Count();
                 if (count != 0)
@@ -36,7 +36,7 @@ namespace WFACinemaTicketBooking
                     return;
                 }
             }
-            using (MovieTicketBookingContext dbContext = new MovieTicketBookingContext())
+            using (MovieTicketBookingContext dbContext = new())
             {
                 User user = new User
                 {
