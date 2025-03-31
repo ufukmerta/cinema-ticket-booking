@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Configuration;
-using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Windows.Forms;
+using WFACinemaTicketBooking.Data;
+using System.Linq;
+using WFACinemaTicketBooking.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace WFACinemaTicketBooking
 {
@@ -12,57 +14,41 @@ namespace WFACinemaTicketBooking
         {
             InitializeComponent();
         }
-        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
-        internal int movieID = 0;
-        void connect()
-        {
-            if (connection.State == ConnectionState.Closed)
-            {
-                connection.Open();
-            }
-            else
-            {
-                connection.Close();
-            }
-        }
+        internal int movieID = -1;
         private void formMovieDetail_Load(object sender, EventArgs e)
         {
-            using (SqlCommand cmd = new SqlCommand("select name, description, imageUrl from tbl_Movie where movieID=@movieID", connection))
+            Movie movie = new();
+            using (MovieTicketBookingContext dbContext = new())
             {
-                connect();
-                cmd.Parameters.AddWithValue("@movieID", movieID);
-                SqlDataReader dr = cmd.ExecuteReader();
-                if (dr.Read())
+                movie = dbContext.Movies.Include(x => x.Genres).Include(x => x.Directors).FirstOrDefault(m => m.MovieId == movieID);
+                if (movie == null)
                 {
-                    lbl_MovieName.Text += dr["name"];
-                    lbl_Detail.Text += dr["description"];
-                    pcBox_Movie.LoadAsync(dr["imageUrl"].ToString());
+                    MessageBox.Show("Cannot find movie details", "Error Occured!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Close();
+                    return;
                 }
-                connect();
-            }
-            using (SqlCommand cmd = new SqlCommand("select genre from tbl_Genre left join tbl_MovieGenre on tbl_Genre.genreID=tbl_MovieGenre.genreID where tbl_MovieGenre.movieID=@movieID", connection))
-            {
-                connect();
-                cmd.Parameters.AddWithValue("@movieID", movieID);
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
+                else
                 {
-                    lbl_Genre.Text += dr["genre"] + " ,";
+                    lbl_MovieName.Text += movie.Name;
+                    lbl_Detail.Text += movie.Description;
+                    pcBox_Movie.LoadAsync(movie.ImageUrl);
+                    if (movie.Genres != null)
+                    {
+                        foreach (var genre in movie.Genres)
+                        {
+                            lbl_Genre.Text += genre.Name + " ,";
+                        }
+                        lbl_Genre.Text = lbl_Genre.Text[..^1];
+                    }
+                    if (movie.Directors != null)
+                    {
+                        foreach (var director in movie.Directors)
+                        {
+                            lbl_Director.Text += director.Name + " ,";
+                        }
+                        lbl_Director.Text = lbl_Director.Text[..^1];
+                    }
                 }
-                lbl_Genre.Text = lbl_Genre.Text.Substring(0, lbl_Genre.Text.Length - 1);
-                connect();
-            }
-            using (SqlCommand cmd = new SqlCommand("select name from tbl_Director left join tbl_MovieDirector on tbl_Director.directorID=tbl_MovieDirector.directorID where tbl_MovieDirector.movieID=@movieID", connection))
-            {
-                connect();
-                cmd.Parameters.AddWithValue("@movieID", movieID);
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    lbl_Director.Text += dr["name"] + " ,";
-                }
-                lbl_Director.Text = lbl_Director.Text.Substring(0, lbl_Director.Text.Length - 1);
-                connect();
             }
         }
 
@@ -72,6 +58,11 @@ namespace WFACinemaTicketBooking
             {
                 this.Close();
             }
+        }
+
+        private void formMovieDetail_SizeChanged(object sender, EventArgs e)
+        {
+            Size = new Size(Size.Width, Size.Width / 2);
         }
     }
 }
