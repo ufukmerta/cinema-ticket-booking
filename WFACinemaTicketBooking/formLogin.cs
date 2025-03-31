@@ -28,7 +28,7 @@ namespace WFACinemaTicketBooking
         //user's auth needs to set a for admin and s for ticket seller.
         private void btn_Login_Click(object sender, EventArgs e)
         {
-            using (MovieTicketBookingContext dbContext = new MovieTicketBookingContext())
+            using (MovieTicketBookingContext dbContext = new())
             {
                 User user = dbContext.Users.Where(x => x.Email == txt_Email.Text && x.Password == txt_Password.Text).FirstOrDefault();
                 if (user != null)

@@ -12,41 +12,49 @@ namespace WFACinemaTicketBooking
 
         private void btn_BookTicket_Click(object sender, EventArgs e)
         {
-            formMain formMain = new formMain
+            using (formMain formMain = new()
             {
                 adminPanel = false,
                 isAuthorized = true
-            };
-            this.Hide();
+            })
+            {
+                Hide();
             formMain.ShowDialog();
-            this.Show();
+                Show();
+        }
         }
 
         private void btn_CreateSession_Click(object sender, EventArgs e)
         {
-            formCreateSession formCreateSession = new formCreateSession();
-            this.Hide();
+            using (formCreateSession formCreateSession = new())
+            {
+                Hide();
             formCreateSession.ShowDialog();
-            this.Show();
+                Show();
+        }
         }
 
         private void btn_InsertMovie_Click(object sender, EventArgs e)
         {
-            formInsertMovie formInsertMovie = new formInsertMovie();
-            this.Hide();
+            using (formInsertMovie formInsertMovie = new())
+            {
+                Hide();
             formInsertMovie.ShowDialog();
-            this.Show();
+                Show();
+        }
         }
 
         private void btn_EditBookings_Click(object sender, EventArgs e)
         {
-            formMain formMain = new formMain
+            using (formMain formMain = new()
             {
                 adminPanel = true
-            };
-            this.Hide();
+            })
+            {
+                Hide();
             formMain.ShowDialog();
-            this.Show();
+                Show();
+            }
         }
     }
 }

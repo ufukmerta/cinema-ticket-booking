@@ -143,21 +143,22 @@ namespace WFACinemaTicketBooking
                 MessageBox.Show("Please choose the movie, date, hall and session!");
                 return;
             }
-            this.Hide();
+            Hide();
             if (adminPanel)
             {
-                formBookingAdmin formBookingAdmin = new ()
+                using (formBookingAdmin formBookingAdmin = new()
                 {
                     movieID = Convert.ToInt32(cb_Movie.SelectedValue),
                     date = cb_Date.Text,
                     hallID = Convert.ToInt32(cb_Hall.SelectedValue),
                     sessionID = Convert.ToInt32(cb_Session.SelectedValue)
-                };
+                })
+                {
                 formBookingAdmin.ShowDialog();
             }
             else
             {
-                formBooking formBooking = new ()
+                using (formBooking formBooking = new()
                 {
                     movieID = Convert.ToInt32(cb_Movie.SelectedValue),
                     date = cb_Date.Text,
@@ -166,10 +167,11 @@ namespace WFACinemaTicketBooking
                     userID = userID,
                     userName = userName,
                     isAuthorized = isAuthorized,
-                };
+                })
+                {
                 formBooking.ShowDialog();
             }
-            this.Show();
+            Show();
 
         }
 
