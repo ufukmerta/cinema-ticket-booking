@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using WFACinemaTicketBooking.Models;
 
@@ -35,7 +35,7 @@ public partial class MovieTicketBookingContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=(LocalDB)\\MSSQLLocalDB;Database=MovieTicketBooking;Trusted_Connection=True;");
+        => optionsBuilder.UseSqlServer("Server=(LocalDB)\\MSSQLLocalDB;Database=MovieTicketBooking;Trusted_Connection=True;").LogTo(message => Debug.WriteLine(message));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

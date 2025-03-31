@@ -3,6 +3,8 @@ using System.Windows.Forms;
 using WFACinemaTicketBooking.Data;
 using System.Linq;
 using WFACinemaTicketBooking.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace WFACinemaTicketBooking
 {
@@ -79,7 +81,12 @@ namespace WFACinemaTicketBooking
 
         private void formLogin_Load(object sender, EventArgs e)
         {
-            
+            using (MovieTicketBookingContext dbContext = new())
+            {
+                _ = dbContext.Users.Any();
+            }
+            //seeding required
         }
+
     }
 }
