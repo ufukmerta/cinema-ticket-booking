@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using Microsoft.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
+using WFACinemaTicketBooking.Data;
+using WFACinemaTicketBooking.Models;
 
 namespace WFACinemaTicketBooking
 {
@@ -12,18 +12,6 @@ namespace WFACinemaTicketBooking
         public formCreateSession()
         {
             InitializeComponent();
-        }
-        readonly SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionStr"].ToString());
-        void connect()
-        {
-            if (connection.State == ConnectionState.Closed)
-            {
-                connection.Open();
-            }
-            else
-            {
-                connection.Close();
-            }
         }
         string date;
         private void formCreateSession_Load(object sender, EventArgs e)
@@ -38,26 +26,17 @@ namespace WFACinemaTicketBooking
 
         private void getAllSession()
         {
-            allSession.Clear();
-            connect();
-            SqlCommand cmd = new SqlCommand("select * from tbl_Session", connection);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                allSession.Add(Convert.ToInt32(dr["sessionID"]), dr["hour"].ToString().Substring(0, 2));
-            }
-            connect();
+            MovieTicketBookingContext dbContext = new MovieTicketBookingContext();
+            var sessions = dbContext.Sessions.ToList();
+            dgv_Sessions.DataSource = sessions;
         }
         void getMovies()
         {
-            connect();
-            SqlDataAdapter da = new SqlDataAdapter("select movieID, name from tbl_Movie", connection);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            cb_Movie.DataSource = dt;
-            cb_Movie.DisplayMember = "name";
-            cb_Movie.ValueMember = "movieID";
-            connect();
+            MovieTicketBookingContext dbContext = new MovieTicketBookingContext();
+            var movies = dbContext.Movies.ToList();
+            cb_Movie.DataSource = movies;
+            cb_Movie.DisplayMember = "Name";
+            cb_Movie.ValueMember = "MovieId";
             cleanSessionState();
             getHall();
 
@@ -75,7 +54,7 @@ namespace WFACinemaTicketBooking
         }
         void cleanSessionState()
         {
-            cb_Session10.Checked = cb_Session12.Checked = cb_Session14.Checked = cb_Session16.Checked = cb_Session18.Checked = false;
+            getAllSession();
         }
         void getHall()
         {
@@ -83,158 +62,132 @@ namespace WFACinemaTicketBooking
             {
                 return;
             }
-            date = (dtp.Value).ToString("yyyy-MM-dd");
-            connect();
-            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_Hall WHERE hallID " +
-                "IN (SELECT hallID FROM tbl_MovieSession WHERE movieID=@movieID and date=@date)", connection);
-            cmd.Parameters.AddWithValue("@movieID", cb_Movie.SelectedValue);
-            cmd.Parameters.AddWithValue("@date", date);
-            int count = (int)cmd.ExecuteScalar();
-            string sql = "";
+            date = dtp.Value.ToString("yyyy-MM-dd");           
+            int count = 0;
+            using (MovieTicketBookingContext dbContext = new())
+            {
+                count = dbContext.Halls.Where(x => x.MovieSessions.Any(x => x.MovieId == (int)cb_Movie.SelectedValue && x.Date == DateOnly.FromDateTime(dtp.Value))).Count();
+            }
             if (count == 0)
             {
-                sql = "SELECT * FROM tbl_Hall WHERE hallID NOT IN " +
-                               "(SELECT hallID FROM tbl_MovieSession WHERE date='" + date + "') ORDER BY name";
+                using (MovieTicketBookingContext dbContext = new())
+                {
+                    var halls = dbContext.Halls.Where(x => x.MovieSessions.Any(x => x.Date != DateOnly.FromDateTime(dtp.Value))).OrderBy(x => x.Name).ToList();
+                    cb_Hall.DataSource = halls;
+                    cb_Hall.DisplayMember = "Name";
+                    cb_Hall.ValueMember = "HallId";
+                }
             }
             else
             {
-                sql = "SELECT * FROM tbl_Hall WHERE hallID NOT IN " +
-                               "(SELECT hallID FROM tbl_MovieSession WHERE date='" + date + "') OR hallID IN" +
-                               "(SELECT hallID FROM tbl_MovieSession WHERE movieID=" + cb_Movie.SelectedValue + " and date='" + date + "') ORDER BY name";
+                using (MovieTicketBookingContext dbContext = new())
+                {
+                    var halls = dbContext.Halls.Where(x =>
+                        x.MovieSessions.Any(x => x.MovieId == (int)cb_Movie.SelectedValue && x.Date == DateOnly.FromDateTime(dtp.Value)) ||
+                        x.MovieSessions.Any(x => x.Date != DateOnly.FromDateTime(dtp.Value)))
+                        .OrderBy(x => x.Name).ToList();
+                    cb_Hall.DataSource = halls;
+                    cb_Hall.DisplayMember = "Name";
+                    cb_Hall.ValueMember = "HallId";
+                }
             }
-            SqlDataAdapter da = new SqlDataAdapter(sql, connection);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            cb_Hall.DataSource = dt;
-            cb_Hall.DisplayMember = "name";
-            cb_Hall.ValueMember = "hallID";
-            connect();
             if (count != 0) getMovieSession();
         }
         void getMovieSession()
-        {
-            connect();
-            SqlCommand cmd = new SqlCommand("select * from tbl_Session where sessionID " +
-                "IN (SELECT sessionID FROM tbl_MovieSession WHERE movieID=@movieID and date=@date)", connection);
-            cmd.Parameters.AddWithValue("@movieID", cb_Movie.SelectedValue);
-            cmd.Parameters.AddWithValue("@date", date);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
+        {            
+            using (MovieTicketBookingContext dbContext = new())
             {
-                int hour = Convert.ToInt32(dr["hour"].ToString().Substring(0, 2));
-                try
+                date = dtp.Value.ToString("yyyy-MM-dd");
+                var movieSession = dbContext.MovieSessions.Where(x => x.MovieId == (int)cb_Movie.SelectedValue && x.Date == DateOnly.FromDateTime(dtp.Value)).ToList();
+                var sessions = dbContext.Sessions.Where(x => x.MovieSessions.Any(x => x.MovieId == (int)cb_Movie.SelectedValue && x.Date == DateOnly.FromDateTime(dtp.Value))).ToList();
+                if (sessions.Count >= 1)
                 {
-                    (Controls.Find("cb_Session" + hour, true)[0] as CheckBox).Checked = true;
-                    Controls.Find("cb_Session" + hour, true)[0].Tag = true;
-                }
-                catch (ArgumentException)
-                {
-                    MessageBox.Show("Error occurred on session times. Update is required. Inform your manager!");
-                }
+                    foreach (DataGridViewRow row in dgv_Sessions.Rows)
+                    {
+                        if (sessions.Any(x => x.Hour == row.Cells[2].Value.ToString()))
+                        {
+                            row.Cells[0].Value = true;
+                            if (dbContext.MovieSessions.Where(x => x.Session.Hour == row.Cells[2].Value.ToString()).Count() != 0)
+                            {
+                                row.Cells[0].ReadOnly = true;
+                                row.Cells[0].ToolTipText = "This session has at least one booking. The session cannot be canceled.";
+                            }
+                        }
+                    }
+                }                
             }
-            connect();
         }
         private void cb_Movie_SelectedValueChanged(object sender, EventArgs e)
         {
             cleanSessionState();
             getHall();
         }
-        Dictionary<int, string> allSession = new Dictionary<int, string>();
-        int findSessionID(int i)
-        {
-            foreach (int sessionID in allSession.Keys)
-            {
-                if (allSession[sessionID] == i.ToString())
-                {
-                    return sessionID;
-                }
-            }
-            return -1;
-        }
         private void btn_InsertSessions_Click(object sender, EventArgs e)
         {
             bool sessionError = false;
-            getMovieSession();
+            getMovieSession();//to make sure that the session is updated
             date = (dtp.Value).ToString("yyyy-MM-dd");
-            for (int i = 10; i <= 20; i += 2)
+            foreach (DataGridViewRow row in dgv_Sessions.Rows)
             {
-                if ((Controls.Find("cb_Session" + i, true)[0] as CheckBox).Checked == true)
+                //pass the session if it is already exist
+                if ((bool)row.Cells[0].Value == true)
                 {
-                    //varolan seansı tekrar ekleme
-                    if (Convert.ToBoolean(Controls.Find("cb_Session" + i, true)[0].Tag) == true)
-                        continue;
-                    int sessionID = findSessionID(i);
-                    if (sessionID == -1)
+                    int sessionID = Convert.ToInt32(row.Cells[1].Value);
+                    using (MovieTicketBookingContext dbContext = new())
                     {
-                        sessionError = true;
-                        this.Controls.Find("cb_Session" + i, true)[0].Enabled = false;
-                        return;
+                        dbContext.MovieSessions.Add(new MovieSession
+                        {
+                            MovieId = (int)cb_Movie.SelectedValue,
+                            HallId = (int)cb_Hall.SelectedValue,
+                            Date = DateOnly.FromDateTime(dtp.Value),
+                            SessionId = sessionID
+                        });
+                        dbContext.SaveChanges();
                     }
-                    connect();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO tbl_MovieSession(movieID,hallID,date,sessionID) " +
-                        "values(@movieID,@hallID,@date,@sessionID)", connection);
-                    cmd.Parameters.AddWithValue("@movieID", Convert.ToInt32(cb_Movie.SelectedValue));
-                    cmd.Parameters.AddWithValue("@hallID", Convert.ToInt32(cb_Hall.SelectedValue));
-                    cmd.Parameters.AddWithValue("@date", date);
-                    cmd.Parameters.AddWithValue("@sessionID", sessionID);
-                    cmd.ExecuteNonQuery();
-                    connect();
                 }
                 else
                 {
-                    if (Convert.ToBoolean(Controls.Find("cb_Session" + i, true)[0].Tag) == true)
+                    if ((bool)row.Cells[0].Value == true)
                     {
-                        int sessionID = findSessionID(i);
-                        int movieSessionID = -1;
-                        connect();
-                        SqlCommand cmd1 = new SqlCommand("SELECT movieSessionID from tbl_MovieSession where " +
-                            "movieID=@movieID AND hallID=@hallID AND date=@date AND sessionID=@sessionID", connection);
-                        cmd1.Parameters.AddWithValue("@movieID", Convert.ToInt32(cb_Movie.SelectedValue));
-                        cmd1.Parameters.AddWithValue("@hallID", Convert.ToInt32(cb_Hall.SelectedValue));
-                        cmd1.Parameters.AddWithValue("@date", date);
-                        cmd1.Parameters.AddWithValue("@sessionID", sessionID);
-                        SqlDataReader dr1 = cmd1.ExecuteReader();
-                        if (dr1.Read())
+                        int sessionID = Convert.ToInt32(row.Cells[1].Value); ;
+                        using (MovieTicketBookingContext dbContext = new())
                         {
-                            movieSessionID = Convert.ToInt32(dr1["movieSessionID"]);
-                        }
-                        connect();
-                        connect();
-                        SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tbl_TicketBooking WHERE movieSessionID=@movieSessionID", connection);
-                        cmd1.Parameters.AddWithValue("@movieSessionID", movieSessionID);
-                        int result = (Int32)cmd.ExecuteScalar();
-                        if (result != 0)
-                        {
-                            MessageBox.Show("For " + cb_Movie.SelectedText + " movie, " +
-                                "" + date + " date, " +
-                                "" + i + "hour, at least there is one booking. The Session cannot be canceled.");
-                            connect();
-                            continue;
-                        }
-                        else
-                        {
-                            connect();
-                            connect();
-                            SqlCommand cmd2 = new SqlCommand("delete from tbl_MovieSession where movieSessionID=@movieSessionID", connection);
-                            cmd2.Parameters.AddWithValue("@movieSessionID", movieSessionID);
-                            if (cmd2.ExecuteNonQuery() == 1)
+                            var ticketBookings = dbContext.TicketBookings.Where(x =>
+                            x.MovieSession.MovieId == Convert.ToInt32(cb_Movie.SelectedValue) &&
+                            x.MovieSession.HallId == Convert.ToInt32(cb_Hall.SelectedValue) &&
+                            x.MovieSession.SessionId == sessionID &&
+                            x.MovieSession.Date == DateOnly.FromDateTime(dtp.Value)).ToList();
+                            if (ticketBookings.Count > 0)
                             {
-                                MessageBox.Show("For " + cb_Movie.Text + " movie, " +
-                                "" + date + " date, " +
-                                "" + i + " hour, the session is canceled.");
+                                MessageBox.Show("For " + cb_Movie.SelectedText + " movie, " +
+                                    "" + date + " date, " +
+                                    "" + row.Cells[2].Value.ToString() + "hour, at least there is one booking. The Session cannot be canceled.");
+                                continue;
                             }
-                            connect();
+                            else
+                            {
+                                var movieSession = dbContext.MovieSessions.Where(x => x.MovieSessionId ==
+                                ticketBookings.FirstOrDefault().MovieSessionId).FirstOrDefault();
+                                dbContext.MovieSessions.Remove(movieSession);
+                                int c = dbContext.SaveChanges();
+                                if (c == 1)
+                                {
+                                    MessageBox.Show("For " + cb_Movie.Text + " movie, " +
+                                    "" + date + " date, " +
+                                    "" + row.Cells[2].Value.ToString() + " hour, the session is canceled.");
+                                }
+                            }
                         }
                     }
                 }
-            }
-            if (sessionError) MessageBox.Show("Not all selected session created. Created ones are selected.");
-            else MessageBox.Show("All sessions are created.");
+                if (sessionError) MessageBox.Show("Not all selected session created. Created ones are selected.");
+                else MessageBox.Show("All sessions are created.");
+            }            
         }
 
         private void cb_Hall_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (connection.State == ConnectionState.Open)
+            if (cb_Hall.SelectedValue == null)
             {
                 return;
             }
