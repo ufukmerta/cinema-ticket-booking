@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -124,7 +126,7 @@ namespace WFACinemaTicketBooking
                         if ((bool)row.Cells[0].Value == true)
                         {
                             Director director = dbContext.Directors.Find(Convert.ToInt32(row.Cells[1].Value));
-                            
+
                             chosenDirectors.Add(director);
                         }
                     }
@@ -141,7 +143,7 @@ namespace WFACinemaTicketBooking
                 dgv_Choices.Columns.AddRange([columns[0], columns[1], columns[2]]);
                 using (MovieTicketBookingContext dbContext = new())
                 {
-                    var genres = dbContext.Genres.Select(x => new { x.GenreId, x.Name }).OrderBy(x => x.Name).ToList();
+                    genres = dbContext.Genres.OrderBy(x => x.Name).ToList();
                     dgv_Choices.DataSource = genres;
                 }
             }
@@ -151,13 +153,72 @@ namespace WFACinemaTicketBooking
                 dgv_Choices.Columns.AddRange([columns[0], columns[1], columns[2]]);
                 using (MovieTicketBookingContext dbContext = new())
                 {
-                    var directors = dbContext.Directors.Select(x => new { x.DirectorId, x.Name }).OrderBy(x => x.Name).ToList();
+                    directors = dbContext.Directors.OrderBy(x => x.Name).ToList();
                     dgv_Choices.DataSource = directors;
                 }
             }
             else
             {
                 Close();
+            }
+        }
+
+        private List<Genre> genres;
+        private List<Director> directors;
+
+        ArrayList selectedEntities = new();
+        private void dgv_Choices_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            foreach (DataGridViewRow row in dgv_Choices.Rows)
+            {
+                if (row.Cells[0].Value == null)
+                {
+                    continue;
+                }
+                if ((bool)row.Cells[0].Value == true)
+                {
+                    selectedEntities.Add(row.Cells[1].Value);
+                }
+                else
+                {
+                    selectedEntities.Remove(row.Cells[1].Value);
+                }
+            }
+        }
+
+        private void txt_Search_TextChanged(object sender, EventArgs e)
+        {
+            if (txt_Search.Text.Trim() != "")
+            {
+                if (genre)
+                {
+                    var filterGenre = genres.Where(x => x.Name.ToLower().Contains(txt_Search.Text.ToLower())).ToList();
+                    dgv_Choices.DataSource = filterGenre;
+                }
+                if (director)
+                {
+                    var filterDirector = directors.Where(x => x.Name.ToLower().Contains(txt_Search.Text.ToLower())).ToList();
+                    dgv_Choices.DataSource = filterDirector;
+
+                }
+            }
+            else
+            {
+                if (genre)
+                {
+                    dgv_Choices.DataSource = genres;
+                }
+                if (director)
+                {
+                    dgv_Choices.DataSource = directors;
+                }
+            }
+            foreach (DataGridViewRow row in dgv_Choices.Rows)
+            {
+                if (selectedEntities.Contains(row.Cells[1].Value))
+                {
+                    row.Cells[0].Value = true;
+                }
             }
         }
     }
